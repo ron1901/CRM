@@ -29,12 +29,12 @@ export default async function ClustersPage() {
           </thead>
           <tbody>
             {rows.map((c, i) => (
-              <tr key={c.id} className={c.status === 'Dropped' ? 'text-slate-400' : 'hover:bg-slate-50'}>
+              <tr key={c.id} className={c.status === 'Dropped' ? 'text-slate-500' : 'hover:bg-white/5'}>
                 <td>{i + 1}</td>
                 <td><Link className="link font-medium" href={`/clusters/${c.id}`}>{c.name}</Link></td>
                 <td>
                   <span className="font-semibold">{Number(c.weighted_score).toFixed(2)}</span>
-                  <span className="text-xs text-slate-400"> / 5 · {scoredCount(c)}/7 scored</span>
+                  <span className="text-xs text-slate-500"> / 5 · {scoredCount(c)}/7 scored</span>
                 </td>
                 <td><EntryBarBadge c={c} /></td>
                 <td>{c.interviewee_count}</td>
@@ -45,7 +45,7 @@ export default async function ClustersPage() {
                 <td>{c.status}</td>
               </tr>
             ))}
-            {rows.length === 0 && <tr><td colSpan={10} className="text-slate-500">No clusters yet. Create one here or from the Observations table.</td></tr>}
+            {rows.length === 0 && <tr><td colSpan={10} className="text-slate-400">No clusters yet. Create one here or from the Observations table.</td></tr>}
           </tbody>
         </table>
       </div>

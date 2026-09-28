@@ -33,17 +33,17 @@ export function ContactImport() {
       {rows.length > 0 && (
         <>
           <p>
-            {rows.length} rows · <span className="text-green-700">{valid.length} valid</span>
-            {rows.length - valid.length > 0 && <span className="text-red-700"> · {rows.length - valid.length} with errors (will be skipped)</span>}
+            {rows.length} rows · <span className="text-emerald-300">{valid.length} valid</span>
+            {rows.length - valid.length > 0 && <span className="text-rose-300"> · {rows.length - valid.length} with errors (will be skipped)</span>}
           </p>
           <div className="max-h-80 overflow-auto rounded border">
             <table className="tbl">
               <thead><tr><th>Row</th><th>Name</th><th>Company</th><th>Status</th><th>Problems</th></tr></thead>
               <tbody>
                 {rows.map((r, i) => (
-                  <tr key={i} className={r.errors.length ? 'bg-red-50' : ''}>
+                  <tr key={i} className={r.errors.length ? 'bg-rose-500/10' : ''}>
                     <td>{i + 2}</td><td>{r.name}</td><td>{r.company}</td><td>{r.status}</td>
-                    <td className="text-xs text-red-700">{r.errors.join('; ')}</td>
+                    <td className="text-xs text-rose-300">{r.errors.join('; ')}</td>
                   </tr>
                 ))}
               </tbody>
@@ -59,10 +59,10 @@ export function ContactImport() {
         </>
       )}
       {result && (
-        <div className={`rounded p-2 ${result.error ? 'bg-red-50 text-red-700' : 'bg-green-50 text-green-800'}`}>
+        <div className={`rounded p-2 ${result.error ? 'bg-rose-500/10 text-rose-300' : 'bg-emerald-400/10 text-emerald-300'}`}>
           {result.error ?? `Imported ${result.inserted} new, updated ${result.updated}.`}
           {!!result.skipped?.length && (
-            <ul className="mt-1 list-disc pl-5 text-amber-800">{result.skipped.map((s) => <li key={s}>{s}</li>)}</ul>
+            <ul className="mt-1 list-disc pl-5 text-amber-200">{result.skipped.map((s) => <li key={s}>{s}</li>)}</ul>
           )}
         </div>
       )}

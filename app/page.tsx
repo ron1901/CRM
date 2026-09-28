@@ -57,7 +57,7 @@ export default async function Dashboard() {
 
   return (
     <div className="space-y-6">
-      <h1 className="h1">Dashboard <span className="text-sm font-normal text-slate-500">today {fmt(today)}</span></h1>
+      <h1 className="h1">Dashboard <span className="text-sm font-normal text-slate-400">today {fmt(today)}</span></h1>
 
       <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <KpiTile label="Outreach sent" {...outreach} today={today} />
@@ -92,7 +92,7 @@ export default async function Dashboard() {
                 const it = done.rows.find((r) => r.due_date === t.due_date);
                 const future = t.due_date > today;
                 return (
-                  <tr key={t.due_date} className={t.due_date === outreach.next?.due_date ? 'bg-indigo-50' : ''}>
+                  <tr key={t.due_date} className={t.due_date === outreach.next?.due_date ? 'bg-cyan-400/10' : ''}>
                     <td>{fmt(t.due_date)}</td>
                     <td><Vs actual={future ? outreach.actual : outreachBy(t.due_date)} target={t.target} future={future} /></td>
                     <td>{it && <Vs actual={future ? done.actual : interviewsBy(t.due_date)} target={it.target} future={future} />}</td>
@@ -101,7 +101,7 @@ export default async function Dashboard() {
               })}
             </tbody>
           </table>
-          <p className="mt-2 text-xs text-slate-500">Past rows show where you were on that date; future rows show today’s count. Outreach = contacts that left “Target”.</p>
+          <p className="mt-2 text-xs text-slate-400">Past rows show where you were on that date; future rows show today’s count. Outreach = contacts that left “Target”.</p>
         </div>
 
         <div className="card">
@@ -111,11 +111,11 @@ export default async function Dashboard() {
               const days = daysBetween(today, g.date);
               const isNext = g.id === nextGate?.id;
               return (
-                <li key={g.id} className={`flex items-center gap-2 rounded px-2 py-1 ${isNext ? 'bg-indigo-50 font-medium' : ''} ${g.done ? 'text-slate-400 line-through' : ''}`}>
+                <li key={g.id} className={`flex items-center gap-2 rounded px-2 py-1 ${isNext ? 'bg-cyan-400/10 font-medium' : ''} ${g.done ? 'text-slate-500 line-through' : ''}`}>
                   <GateCheckbox id={g.id} done={g.done} />
                   <span className="w-14">{fmt(g.date)}</span>
                   <span className="flex-1">{g.title}</span>
-                  {!g.done && <span className={`text-xs ${days < 0 ? 'text-red-600' : 'text-slate-500'}`}>{days < 0 ? `${-days}d overdue` : days === 0 ? 'today' : `in ${days}d`}</span>}
+                  {!g.done && <span className={`text-xs ${days < 0 ? 'text-rose-400' : 'text-slate-400'}`}>{days < 0 ? `${-days}d overdue` : days === 0 ? 'today' : `in ${days}d`}</span>}
                 </li>
               );
             })}
@@ -131,7 +131,7 @@ export default async function Dashboard() {
           <Breakdown title="Company type" keys={COMPANY_TYPES} values={interviews.map((i) => i.contact?.company_type)} />
         </div>
       </section>
-      <p className="text-xs text-slate-500">Go to <Link className="link" href="/pipeline">Pipeline</Link> for overdue next actions.</p>
+      <p className="text-xs text-slate-400">Go to <Link className="link" href="/pipeline">Pipeline</Link> for overdue next actions.</p>
     </div>
   );
 }
@@ -139,14 +139,14 @@ export default async function Dashboard() {
 function Progress({ value, max }: { value: number; max: number }) {
   const pct = Math.min(100, max ? (value / max) * 100 : 0);
   return (
-    <div className="mt-2 h-2 w-full rounded-full bg-slate-100" role="progressbar" aria-valuenow={value} aria-valuemax={max}>
-      <div className="h-2 rounded-full bg-indigo-500" style={{ width: `${pct}%` }} />
+    <div className="mt-2 h-2 w-full rounded-full bg-white/10" role="progressbar" aria-valuenow={value} aria-valuemax={max}>
+      <div className="h-2 rounded-full bg-gradient-to-r from-cyan-400 via-violet-500 to-fuchsia-500 shadow-[0_0_10px_rgba(139,92,246,0.6)]" style={{ width: `${pct}%` }} />
     </div>
   );
 }
 
 function Status({ met }: { met: boolean }) {
-  return met ? <span className="text-xs font-medium text-green-700">✓ Met</span> : <span className="text-xs font-medium text-amber-700">▲ Behind</span>;
+  return met ? <span className="text-xs font-medium text-emerald-300">✓ Met</span> : <span className="text-xs font-medium text-amber-300">▲ Behind</span>;
 }
 
 function KpiTile({ label, next, actual, today }: { label: string; next?: Target; actual: number; today: string }) {
@@ -154,10 +154,10 @@ function KpiTile({ label, next, actual, today }: { label: string; next?: Target;
   const days = daysBetween(today, next.due_date);
   return (
     <div className="card">
-      <div className="flex justify-between text-slate-600"><span>{label}</span><Status met={actual >= next.target} /></div>
-      <div className="mt-1 text-3xl font-semibold">{actual}<span className="text-base font-normal text-slate-400"> / {next.target}</span></div>
+      <div className="flex justify-between text-slate-300"><span>{label}</span><Status met={actual >= next.target} /></div>
+      <div className="mt-1 text-3xl font-bold"><span className="num">{actual}</span><span className="text-base font-normal text-slate-500"> / {next.target}</span></div>
       <Progress value={actual} max={next.target} />
-      <div className="mt-1 text-xs text-slate-500">
+      <div className="mt-1 text-xs text-slate-400">
         target by {fmt(next.due_date)} {days >= 0 ? `(${days}d left, ${Math.max(0, next.target - actual)} to go)` : '(last target date passed)'}
       </div>
     </div>
@@ -167,13 +167,13 @@ function KpiTile({ label, next, actual, today }: { label: string; next?: Target;
 function SimpleTile({ label, value, target, met, note }: { label: string; value: number | string; target?: number; met?: boolean; note?: string }) {
   return (
     <div className="card">
-      <div className="flex justify-between text-slate-600"><span>{label}</span>{met !== undefined && <Status met={met} />}</div>
-      <div className="mt-1 text-3xl font-semibold">
-        {value}
-        {target !== undefined && <span className="text-base font-normal text-slate-400"> / target {target}{typeof value === 'number' ? '+' : ''}</span>}
+      <div className="flex justify-between text-slate-300"><span>{label}</span>{met !== undefined && <Status met={met} />}</div>
+      <div className="mt-1 text-3xl font-bold">
+        <span className="num">{value}</span>
+        {target !== undefined && <span className="text-base font-normal text-slate-500"> / target {target}{typeof value === 'number' ? '+' : ''}</span>}
       </div>
       {typeof value === 'number' && target !== undefined && <Progress value={value} max={target} />}
-      {note && <div className="mt-1 text-xs text-slate-500">{note}</div>}
+      {note && <div className="mt-1 text-xs text-slate-400">{note}</div>}
     </div>
   );
 }
@@ -183,7 +183,7 @@ function Vs({ actual, target, future }: { actual: number; target: number; future
   return (
     <span>
       <span className="font-medium">{actual}</span> / {target}{' '}
-      {met ? <span className="text-green-700">✓</span> : !future ? <span className="text-amber-700">▲ missed</span> : null}
+      {met ? <span className="text-emerald-300">✓</span> : !future ? <span className="text-amber-300">▲ missed</span> : null}
     </span>
   );
 }
@@ -205,11 +205,11 @@ function Breakdown({ title, keys, values }: { title: string; keys: readonly stri
         <tbody>
           {rows.map(([k, n]) => (
             <tr key={k} title={`${k}: ${n} interview(s)`}>
-              <td className="w-36 py-0.5 pr-2 text-slate-600">{k}</td>
+              <td className="w-36 py-0.5 pr-2 text-slate-300">{k}</td>
               <td className="py-0.5">
                 <div className="flex items-center gap-2">
-                  <div className="h-3 rounded-r bg-indigo-500" style={{ width: `${(n / max) * 100}%`, minWidth: n ? 4 : 0 }} />
-                  <span className="text-xs text-slate-700">{n}</span>
+                  <div className="h-3 rounded-r bg-gradient-to-r from-cyan-400 via-violet-500 to-fuchsia-500 shadow-[0_0_10px_rgba(139,92,246,0.6)]" style={{ width: `${(n / max) * 100}%`, minWidth: n ? 4 : 0 }} />
+                  <span className="text-xs text-slate-200">{n}</span>
                 </div>
               </td>
             </tr>

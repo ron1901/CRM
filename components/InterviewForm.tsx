@@ -54,7 +54,7 @@ export function InterviewForm({
         </label>
       </div>
       {!consent && hadRecordingData && (
-        <p className="rounded bg-amber-50 p-2 text-amber-800">Saving without consent will permanently erase the stored transcript and recording link.</p>
+        <p className="rounded bg-amber-400/10 p-2 text-amber-200">Saving without consent will permanently erase the stored transcript and recording link.</p>
       )}
       <div className="grid gap-3 sm:grid-cols-2">
         <Field label="Fathom recording URL">

@@ -30,7 +30,7 @@ export default async function ContactPage({ params, searchParams }: { params: Pr
 
   return (
     <div className="space-y-4">
-      {created && <p className="rounded bg-green-50 p-2 text-green-800">Contact added.</p>}
+      {created && <p className="rounded bg-emerald-400/10 p-2 text-emerald-300">Contact added.</p>}
       <div className="flex flex-wrap items-center gap-2">
         <h1 className="h1 mb-0 mr-auto">{contact.name}</h1>
         <Link href={`/interviews/new?contact=${contact.id}`} className="btn">Log interview</Link>
@@ -40,7 +40,7 @@ export default async function ContactPage({ params, searchParams }: { params: Pr
       <div className="grid gap-4 md:grid-cols-2">
         <div className="card">
           <h2 className="h2">Interviews</h2>
-          {ivs.length === 0 && <p className="text-slate-500">None yet.</p>}
+          {ivs.length === 0 && <p className="text-slate-400">None yet.</p>}
           <ul className="space-y-1">
             {ivs.map((i) => (
               <li key={i.id}>
@@ -51,7 +51,7 @@ export default async function ContactPage({ params, searchParams }: { params: Pr
         </div>
         <div className="card">
           <h2 className="h2">People they referred</h2>
-          {(referrals ?? []).length === 0 && <p className="text-slate-500">None yet.</p>}
+          {(referrals ?? []).length === 0 && <p className="text-slate-400">None yet.</p>}
           <ul className="space-y-1">
             {(referrals ?? []).map((r) => (
               <li key={r.id}><Link className="link" href={`/contacts/${r.id}`}>{r.name}</Link> {r.company && `(${r.company})`} — {r.status}</li>

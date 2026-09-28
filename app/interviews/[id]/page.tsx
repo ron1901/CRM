@@ -29,23 +29,23 @@ export default async function InterviewPage({ params, searchParams }: { params: 
 
   return (
     <div className="space-y-4">
-      {isNew && <p className="rounded bg-green-50 p-2 text-green-800">Interview saved. Now add observations (one per problem mentioned) and any referrals.</p>}
+      {isNew && <p className="rounded bg-emerald-400/10 p-2 text-emerald-300">Interview saved. Now add observations (one per problem mentioned) and any referrals.</p>}
       <div className="flex flex-wrap items-center gap-2">
         <h1 className="h1 mb-0 mr-auto">
           {interview.date} · <Link className="link" href={`/contacts/${contact?.id}`}>{contact?.name}</Link>
-          <span className="ml-2 text-base font-normal text-slate-500">{[contact?.title, contact?.company, contact?.hunting_ground].filter(Boolean).join(' · ')}</span>
+          <span className="ml-2 text-base font-normal text-slate-400">{[contact?.title, contact?.company, contact?.hunting_ground].filter(Boolean).join(' · ')}</span>
         </h1>
         <DeleteButton
           action={deleteInterview.bind(null, id)}
           confirmText={`Delete this interview, its transcript/recording link and ${obs.length} observation(s)?`}
           label="Delete interview"
-          className="btn-ghost text-red-600"
+          className="btn-ghost text-rose-400"
         />
       </div>
 
       <details className="card">
         <summary className="cursor-pointer font-semibold">
-          Interview details <span className="font-normal text-slate-500">— {interview.workflow_discussed ?? 'no workflow'} · {interview.interviewers} · {interview.consent_to_record ? 'recorded' : 'not recorded'}</span>
+          Interview details <span className="font-normal text-slate-400">— {interview.workflow_discussed ?? 'no workflow'} · {interview.interviewers} · {interview.consent_to_record ? 'recorded' : 'not recorded'}</span>
         </summary>
         <div className="mt-4">
           <InterviewForm action={saveInterview.bind(null, id)} interview={interview} today={today()} />
@@ -56,21 +56,21 @@ export default async function InterviewPage({ params, searchParams }: { params: 
         <h2 className="h2">Observations ({obs.length})</h2>
         <div className="mb-4 space-y-2">
           {obs.map((o) => (
-            <details key={o.id} className="rounded border border-slate-200 p-2">
+            <details key={o.id} className="rounded border border-white/10 p-2">
               <summary className="cursor-pointer">
-                <span className="badge mr-2 bg-slate-100">{o.evidence_type}</span>
-                {o.severity && <span className="badge mr-2 bg-amber-100">sev {o.severity}</span>}
+                <span className="badge mr-2 bg-white/10">{o.evidence_type}</span>
+                {o.severity && <span className="badge mr-2 bg-amber-400/15 text-amber-200">sev {o.severity}</span>}
                 {o.problem_statement}
-                {o.cluster_id && <span className="ml-2 text-xs text-indigo-600">→ {clusterName(o.cluster_id)}</span>}
+                {o.cluster_id && <span className="ml-2 text-xs text-cyan-300">→ {clusterName(o.cluster_id)}</span>}
               </summary>
               <div className="mt-3 space-y-2">
                 <ObservationForm interviewId={id} observation={o} clusters={clusterList} />
-                <DeleteButton action={deleteObservation.bind(null, o.id, id)} confirmText="Delete this observation?" label="Delete observation" className="btn-ghost text-red-600" />
+                <DeleteButton action={deleteObservation.bind(null, o.id, id)} confirmText="Delete this observation?" label="Delete observation" className="btn-ghost text-rose-400" />
               </div>
             </details>
           ))}
         </div>
-        <div className="rounded bg-indigo-50/50 p-3">
+        <div className="rounded bg-cyan-400/5 border border-cyan-400/20 p-3">
           <h3 className="mb-2 font-medium">Add observation</h3>
           <ObservationForm interviewId={id} clusters={clusterList} />
         </div>
@@ -91,7 +91,7 @@ export default async function InterviewPage({ params, searchParams }: { params: 
           <Field label="Owner"><Select name="owner" options={OWNERS} /></Field>
           <button className="btn justify-center">+ Add referral</button>
         </ActionForm>
-        <p className="mt-2 text-xs text-slate-500">Creates a Target contact (source: Snowball referral, referred by {contact?.name}).</p>
+        <p className="mt-2 text-xs text-slate-400">Creates a Target contact (source: Snowball referral, referred by {contact?.name}).</p>
       </div>
     </div>
   );

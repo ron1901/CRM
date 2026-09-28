@@ -36,7 +36,7 @@ export function ActionForm({
       <fieldset disabled={pending} className="contents">
         {children}
       </fieldset>
-      {error && <p className="mt-2 rounded bg-red-50 p-2 text-red-700">{error}</p>}
+      {error && <p className="mt-2 rounded bg-rose-500/10 p-2 text-rose-300">{error}</p>}
     </form>
   );
 }

@@ -7,9 +7,9 @@ export function scoredCount(c: ClusterStats) {
 
 export function EntryBarBadge({ c }: { c: ClusterStats }) {
   return c.passes_entry_bar ? (
-    <span className="badge bg-green-600 text-white">✓ Entry bar</span>
+    <span className="badge bg-gradient-to-r from-emerald-400 to-cyan-400 text-slate-950 shadow-[0_0_14px_rgba(52,211,153,0.7)]">✓ Entry bar</span>
   ) : (
-    <span className="badge bg-slate-200 text-slate-600" title="Needs ≥5 interviewees, ≥2 companies, ≥1 Paid-for observation">
+    <span className="badge bg-white/10 text-slate-300" title="Needs ≥5 interviewees, ≥2 companies, ≥1 Paid-for observation">
       Below bar
     </span>
   );
@@ -24,7 +24,7 @@ export function EntryBarChecklist({ c }: { c: ClusterStats }) {
   return (
     <ul className="space-y-0.5">
       {items.map(([ok, text]) => (
-        <li key={text} className={ok ? 'text-green-700' : 'text-slate-500'}>{ok ? '✓' : '○'} {text}</li>
+        <li key={text} className={ok ? 'text-emerald-300' : 'text-slate-400'}>{ok ? '✓' : '○'} {text}</li>
       ))}
     </ul>
   );

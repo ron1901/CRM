@@ -33,7 +33,7 @@ export default async function InterviewsPage() {
           </thead>
           <tbody>
             {rows.map((r) => (
-              <tr key={r.id} className="hover:bg-slate-50">
+              <tr key={r.id} className="hover:bg-white/5">
                 <td><Link className="link" href={`/interviews/${r.id}`}>{r.date}</Link></td>
                 <td>{r.contact?.name}</td>
                 <td>{r.contact?.company}</td>
@@ -44,7 +44,7 @@ export default async function InterviewsPage() {
                 <td>{r.logged_within_30_min ? '✓' : ''}</td>
               </tr>
             ))}
-            {rows.length === 0 && <tr><td colSpan={8} className="text-slate-500">No interviews yet.</td></tr>}
+            {rows.length === 0 && <tr><td colSpan={8} className="text-slate-400">No interviews yet.</td></tr>}
           </tbody>
         </table>
       </div>

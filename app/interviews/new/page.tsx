@@ -10,7 +10,7 @@ export default async function NewInterview({ searchParams }: { searchParams: Pro
   return (
     <div className="card">
       <h1 className="h1">Log interview</h1>
-      <p className="mb-4 text-slate-500">Step 1 of 2: the interview. Next you add observations on the same page.</p>
+      <p className="mb-4 text-slate-400">Step 1 of 2: the interview. Next you add observations on the same page.</p>
       <InterviewForm action={saveInterview.bind(null, null)} contacts={contacts ?? []} defaultContact={contact} today={today()} />
     </div>
   );
