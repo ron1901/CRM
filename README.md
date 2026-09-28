@@ -34,7 +34,7 @@ Built with Next.js, Supabase (Postgres + auth) and Vercel. There are no AI featu
 1. Push this repo to GitHub. In Vercel: **Add New → Project → Import** the repo. The framework is detected as Next.js.
 2. Add the two environment variables:
    - `NEXT_PUBLIC_SUPABASE_URL` = the Project URL
-   - `NEXT_PUBLIC_SUPABASE_ANON_KEY` = the anon / publishable key
+   - `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` = the publishable key (or `NEXT_PUBLIC_SUPABASE_ANON_KEY` = the legacy anon key)
 3. Click **Deploy**. Open the URL, log in, and you're live.
    - `vercel.json` pins the server to Dublin (`dub1`), next to the database.
 
