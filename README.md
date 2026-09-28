@@ -13,9 +13,12 @@ Built with Next.js, Supabase (Postgres + auth) and Vercel. There are no AI featu
 1. Create a project at [supabase.com](https://supabase.com).
    - **Region: West EU (Ireland)**, for GDPR and so it's close to the app.
    - Save the database password somewhere safe.
-2. **SQL Editor → New query**: paste all of `supabase/schema.sql` and click **Run**.
-3. Open `supabase/seed.sql` and **replace the two example emails** with your real login emails. Paste it into a new query and click **Run**.
-   - This seeds the KPI targets, the decision gates and the team allowlist.
+2. **SQL Editor → New query**: paste all of `supabase/setup.sql` and click **Run**.
+   - This creates the tables and security rules, and seeds the KPI targets and decision gates.
+3. In a new query, add your two login emails to the team allowlist and click **Run**:
+   ```sql
+   insert into allowed_users (email) values ('ron@yourmail.com'), ('ronica@yourmail.com');
+   ```
 4. **Authentication → Sign In / Providers**:
    - Turn **off** "Allow new users to sign up".
    - Keep Email enabled.
@@ -116,12 +119,11 @@ Dates are compared in UTC, so "today" rolls over at 01:00 Irish time and 03:00 I
 
 ## Project layout
 ```
-supabase/schema.sql   tables, constraints, computed cluster_stats view, RLS
-supabase/seed.sql     KPI targets, decision gates, team allowlist
+supabase/setup.sql    tables, constraints, computed cluster_stats view, RLS, seeded targets and gates
 middleware.ts         redirects every request to /login unless signed in
 app/                  one folder per screen (pipeline, interviews, observations, clusters, data)
 app/api/export/       CSV export endpoint (auth required)
-lib/options.ts        pick-list values (keep in sync with schema.sql check constraints)
+lib/options.ts        pick-list values (keep in sync with setup.sql check constraints)
 ```
 
 ## Phase 2 (not built)

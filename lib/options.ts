@@ -1,4 +1,4 @@
-// Single source of truth for pick-lists. Must match the check constraints in supabase/schema.sql.
+// Single source of truth for pick-lists. Must match the check constraints in supabase/setup.sql.
 export const SENIORITY = ['IC', 'Manager', 'Director', 'VP+'] as const;
 export const COMPANY_TYPES = ['Big Pharma', 'Mid-size', 'Biotech', 'CRO', 'Med-comms', 'Reg consultancy', 'Vendor', 'Other'] as const;
 export const HUNTING_GROUNDS = ['Regulatory', 'Quality-GxP', 'PV-Medical Affairs', 'Other'] as const;

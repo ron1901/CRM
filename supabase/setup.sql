@@ -1,5 +1,5 @@
--- Discovery CRM schema. Run once in Supabase → SQL Editor, then run seed.sql.
--- Safe to read top to bottom: tables, computed view, triggers, security.
+-- Discovery CRM: full database setup. Paste this whole file into Supabase → SQL Editor and click Run (once).
+
 
 -- ───────────────────────── Team allowlist ─────────────────────────
 -- Only these emails can read/write anything, even if someone manages to sign up.
@@ -196,3 +196,25 @@ create policy team_all on gates for all to authenticated using (is_team()) with 
 -- allowed_users: no policies → not readable/writable via the API. Edit it in the SQL editor only.
 
 revoke all on all tables in schema public from anon;
+-- Explicit grants, so this works even if "Automatically expose new tables" was switched off.
+grant usage on schema public to authenticated;
+grant select, insert, update, delete on all tables in schema public to authenticated;
+grant execute on function is_team() to authenticated;
+
+-- ───────────────────────── Seed: KPI targets and decision gates (no contacts) ─────────────────────────
+insert into kpi_targets (metric, due_date, target) values
+  ('outreach_sent',   '2026-10-04', 100),
+  ('outreach_sent',   '2026-10-11', 170),
+  ('outreach_sent',   '2026-10-18', 200),
+  ('outreach_sent',   '2026-10-25', 220),
+  ('interviews_done', '2026-10-04', 6),
+  ('interviews_done', '2026-10-11', 18),
+  ('interviews_done', '2026-10-18', 30),
+  ('interviews_done', '2026-10-25', 40);
+
+insert into gates (date, title) values
+  ('2026-10-11', 'Narrow hunting grounds'),
+  ('2026-10-18', '2–3 candidate clusters'),
+  ('2026-10-25', 'Pick one problem'),
+  ('2026-11-01', 'Prototype check'),
+  ('2026-11-08', 'Zell');
