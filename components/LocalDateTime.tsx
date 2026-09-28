@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 // datetime-local shows the viewer's local time (Dublin or Tel Aviv); we store an absolute ISO timestamp.
 function toLocalInput(iso: string | null | undefined) {
@@ -10,7 +10,9 @@ function toLocalInput(iso: string | null | undefined) {
 }
 
 export function LocalDateTimeInput({ name, defaultValue }: { name: string; defaultValue?: string | null }) {
-  const [local, setLocal] = useState(toLocalInput(defaultValue));
+  // Filled after mount: the server (UTC) and the browser disagree on local time.
+  const [local, setLocal] = useState('');
+  useEffect(() => setLocal(toLocalInput(defaultValue)), [defaultValue]);
   return (
     <>
       <input type="datetime-local" className="input" value={local} onChange={(e) => setLocal(e.target.value)} />

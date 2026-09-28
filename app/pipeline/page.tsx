@@ -6,7 +6,8 @@ import type { Contact } from '@/lib/types';
 
 export default async function PipelinePage() {
   const supabase = await db();
-  const { data } = await supabase.from('contacts').select('*').order('next_action_date', { ascending: true, nullsFirst: false });
+  const { data, error } = await supabase.from('contacts').select('*').order('next_action_date', { ascending: true, nullsFirst: false });
+  if (error) throw new Error(error.message);
   return (
     <div>
       <div className="mb-4 flex items-center gap-2">
