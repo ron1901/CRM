@@ -38,6 +38,7 @@ export type Interview = {
   consent_to_record: boolean;
   magic_button_answer: string | null;
   logged_within_30_min: boolean;
+  ai_suggestions: unknown;
 };
 
 export type Observation = {

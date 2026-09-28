@@ -5,11 +5,16 @@ import { InterviewForm } from '@/components/InterviewForm';
 import { ObservationForm } from '@/components/ObservationForm';
 import { ActionForm } from '@/components/ActionForm';
 import { DeleteButton } from '@/components/DeleteButton';
+import { SuggestionsPanel } from '@/components/SuggestionsPanel';
+import type { AiSuggestions } from '@/lib/aiSuggestions';
 import { Field, Select } from '@/components/Fields';
 import { addReferral, deleteInterview, deleteObservation, saveInterview } from '../actions';
 import { OWNERS } from '@/lib/options';
 import { today } from '@/lib/form';
 import type { Contact, Interview, Observation } from '@/lib/types';
+
+// Gives the background AI run (started from this page's save action) time to finish.
+export const maxDuration = 300;
 
 export default async function InterviewPage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ new?: string }> }) {
   const { id } = await params;
@@ -29,7 +34,7 @@ export default async function InterviewPage({ params, searchParams }: { params: 
 
   return (
     <div className="space-y-4">
-      {isNew && <p className="rounded bg-emerald-400/10 p-2 text-emerald-300">Interview saved. Now add observations (one per problem mentioned) and any referrals.</p>}
+      {isNew && <p className="rounded bg-emerald-400/10 p-2 text-emerald-300">Interview saved. If you added notes or a transcript, AI suggestions will appear below. Review them, add anything missing, and add referrals.</p>}
       <div className="flex flex-wrap items-center gap-2">
         <h1 className="h1 mb-0 mr-auto">
           {interview.date} · <Link className="link" href={`/contacts/${contact?.id}`}>{contact?.name}</Link>
@@ -51,6 +56,13 @@ export default async function InterviewPage({ params, searchParams }: { params: 
           <InterviewForm action={saveInterview.bind(null, id)} interview={interview} today={today()} />
         </div>
       </details>
+
+      <SuggestionsPanel
+        interviewId={id}
+        state={interview.ai_suggestions as AiSuggestions | null}
+        hasSource={!!(interview.transcript || interview.notes)}
+        clusters={clusterList}
+      />
 
       <div className="card">
         <h2 className="h2">Observations ({obs.length})</h2>

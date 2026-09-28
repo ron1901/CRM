@@ -1,9 +1,21 @@
 'use server';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
+import { after } from 'next/server';
 import { db } from '@/lib/supabase/server';
 import { bool, num, str } from '@/lib/form';
 import type { ActionResult } from '@/lib/types';
+import { runSuggestions, type AiSuggestions, type PendingSuggestion } from '@/lib/aiSuggestions';
+
+type Db = Awaited<ReturnType<typeof db>>;
+
+// Kick off AI observation suggestions in the background; the page polls until they're ready.
+async function startSuggestions(supabase: Db, interviewId: string) {
+  const running: AiSuggestions = { status: 'running', started_at: new Date().toISOString() };
+  const { error } = await supabase.from('interviews').update({ ai_suggestions: running }).eq('id', interviewId);
+  if (error) return console.error('ai_suggestions update failed', error.message);
+  after(() => runSuggestions(supabase, interviewId));
+}
 
 const PRE_INTERVIEW = ['Target', 'Contacted', 'Replied', 'Scheduled'];
 
@@ -32,8 +44,11 @@ export async function saveInterview(id: string | null, fd: FormData): Promise<Ac
   const supabase = await db();
 
   if (id) {
+    const { data: prev } = await supabase.from('interviews').select('transcript,notes').eq('id', id).single();
     const { error } = await supabase.from('interviews').update(row).eq('id', id);
     if (error) return { error: error.message };
+    const changed = prev && (prev.transcript !== row.transcript || prev.notes !== row.notes);
+    if (changed && (row.transcript || row.notes)) await startSuggestions(supabase, id);
     revalidatePath(`/interviews/${id}`);
     revalidatePath('/interviews');
     return;
@@ -46,6 +61,7 @@ export async function saveInterview(id: string | null, fd: FormData): Promise<Ac
   const patch: Record<string, unknown> = { last_touch_date: row.date };
   if (contact && PRE_INTERVIEW.includes(contact.status)) patch.status = 'Interviewed';
   await supabase.from('contacts').update(patch).eq('id', contact_id);
+  if (row.transcript || row.notes) await startSuggestions(supabase, data.id);
   revalidatePath('/', 'layout');
   redirect(`/interviews/${data.id}?new=1`);
 }
@@ -121,4 +137,61 @@ export async function addReferral(interviewId: string, referrerId: string, fd: F
   revalidatePath(`/interviews/${interviewId}`);
   revalidatePath('/pipeline');
   revalidatePath('/');
+}
+
+// ───── AI suggestions: nothing is saved as an observation until a human approves it ─────
+
+async function pending(supabase: Db, interviewId: string): Promise<PendingSuggestion[]> {
+  const { data } = await supabase.from('interviews').select('ai_suggestions').eq('id', interviewId).single();
+  const s = data?.ai_suggestions as AiSuggestions | null;
+  return s?.status === 'done' ? s.items : [];
+}
+
+async function setPending(supabase: Db, interviewId: string, items: PendingSuggestion[]) {
+  const value: AiSuggestions | null = items.length ? { status: 'done', items } : null;
+  await supabase.from('interviews').update({ ai_suggestions: value }).eq('id', interviewId);
+}
+
+function suggestionRow(interviewId: string, { id: _id, ...o }: PendingSuggestion) {
+  return { ...o, tags: o.tags.map((t) => t.toLowerCase()), interview_id: interviewId };
+}
+
+function revalidateObs(interviewId: string) {
+  revalidatePath(`/interviews/${interviewId}`);
+  revalidatePath('/observations');
+  revalidatePath('/clusters', 'layout');
+  revalidatePath('/');
+}
+
+export async function rerunSuggestions(interviewId: string): Promise<ActionResult> {
+  const supabase = await db();
+  await startSuggestions(supabase, interviewId);
+  revalidatePath(`/interviews/${interviewId}`);
+}
+
+export async function approveSuggestion(interviewId: string, suggestionId: string, fd: FormData): Promise<ActionResult> {
+  const row = observationFromForm(fd);
+  if (!row.problem_statement) return { error: 'Problem statement is required.' };
+  const supabase = await db();
+  const { error } = await supabase.from('observations').insert({ ...row, interview_id: interviewId });
+  if (error) return { error: error.message };
+  await setPending(supabase, interviewId, (await pending(supabase, interviewId)).filter((p) => p.id !== suggestionId));
+  revalidateObs(interviewId);
+}
+
+export async function dismissSuggestion(interviewId: string, suggestionId: string | null): Promise<ActionResult> {
+  const supabase = await db();
+  const items = suggestionId ? (await pending(supabase, interviewId)).filter((p) => p.id !== suggestionId) : [];
+  await setPending(supabase, interviewId, items);
+  revalidatePath(`/interviews/${interviewId}`);
+}
+
+export async function approveAllSuggestions(interviewId: string): Promise<ActionResult> {
+  const supabase = await db();
+  const items = await pending(supabase, interviewId);
+  if (!items.length) return;
+  const { error } = await supabase.from('observations').insert(items.map((p) => suggestionRow(interviewId, p)));
+  if (error) return { error: error.message };
+  await setPending(supabase, interviewId, []);
+  revalidateObs(interviewId);
 }

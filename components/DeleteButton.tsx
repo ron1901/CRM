@@ -20,7 +20,7 @@ export function DeleteButton({
       className={className}
       disabled={pending}
       onClick={() => {
-        if (!confirm(confirmText)) return;
+        if (confirmText && !confirm(confirmText)) return;
         start(async () => {
           const r = await action();
           if (r && r.error) alert(r.error);

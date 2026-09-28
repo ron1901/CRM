@@ -56,6 +56,7 @@ create table interviews (
   consent_to_record boolean not null default false,
   magic_button_answer text,
   logged_within_30_min boolean not null default false,
+  ai_suggestions jsonb, -- AI-suggested observations awaiting human approval
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
   constraint transcript_needs_consent check (transcript is null or consent_to_record),

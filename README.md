@@ -3,7 +3,7 @@
 Internal CRM for Ron and Ronica's 6-week pharma customer-discovery sprint.
 It covers outreach → interviews → observations → problem clusters → scoring.
 
-Built with Next.js, Supabase (Postgres + auth) and Vercel. There are no AI features in v1.
+Built with Next.js, Supabase (Postgres + auth) and Vercel. Claude (Anthropic API) drafts observations from interview notes and transcripts, and a human approves each one before it is saved.
 
 ---
 
@@ -38,6 +38,13 @@ Built with Next.js, Supabase (Postgres + auth) and Vercel. There are no AI featu
 3. Click **Deploy**. Open the URL, log in, and you're live.
    - `vercel.json` pins the server to Dublin (`dub1`), next to the database.
 
+### 3. AI observation suggestions
+1. Existing projects only (skip on a fresh setup): run `supabase/migrations/002_ai_suggestions.sql` in the Supabase SQL Editor.
+2. Create an API key at [console.anthropic.com](https://console.anthropic.com) (Settings → API Keys) and add a small prepaid credit.
+3. In Vercel → Settings → Environment Variables, add `ANTHROPIC_API_KEY`, then redeploy (Deployments → ⋯ → Redeploy).
+
+Each interview costs a few cents to analyse. Notes and transcripts are sent to Anthropic's API, which does not train on API data by default. Transcripts are only stored, and so only sent, when consent to record was given.
+
 ### Run locally (optional)
 ```bash
 cp .env.example .env.local   # fill in the two values
@@ -69,7 +76,11 @@ npm run dev                  # http://localhost:3000
 2. Fill in date, interviewers, workflow discussed and quick notes.
    - Tick **consent to record** only if they agreed. The Fathom link and transcript can't be saved without it.
    - Tick **logged within 30 min** if true.
-3. Click **Save & add observations**. The same page now shows the observation form:
+3. Click **Save & add observations**. If you wrote notes or pasted a transcript, the AI reads them in the background (usually under a minute) and shows **AI-suggested observations**, each already matched to an existing cluster where one fits.
+   - Skim them. Open one to edit it, then **✓ Approve**, or **Dismiss** it. **✓ Approve all** saves everything at once.
+   - Check quotes against the transcript before approving; nothing is saved until you approve it.
+   - Pasting or changing the transcript later re-runs the suggestions. The **✨ Suggest observations with AI** button runs them on demand.
+   - You can still add observations by hand with the form below:
    - **One observation per distinct problem**, each with the problem, a verbatim quote, evidence type and severity.
    - Frequency, hours and cost are worth 20 seconds, because they drive scoring later.
    - **Evidence type** is what the entry bar hinges on:
@@ -126,5 +137,3 @@ app/api/export/       CSV export endpoint (auth required)
 lib/options.ts        pick-list values (keep in sync with setup.sql check constraints)
 ```
 
-## Phase 2 (not built)
-"Paste transcript → suggested observations", where a human approves each suggestion before it's saved. We add it only after v1 has run for a couple of weeks.

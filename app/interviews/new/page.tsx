@@ -3,6 +3,9 @@ import { InterviewForm } from '@/components/InterviewForm';
 import { saveInterview } from '../actions';
 import { today } from '@/lib/form';
 
+// The save action also starts the background AI run.
+export const maxDuration = 300;
+
 export default async function NewInterview({ searchParams }: { searchParams: Promise<{ contact?: string }> }) {
   const { contact } = await searchParams;
   const supabase = await db();
