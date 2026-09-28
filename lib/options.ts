@@ -18,6 +18,6 @@ export const SCORE_CRITERIA = [
   { key: 'score_ai_economics', label: 'AI changes economics', weight: 15 },
   { key: 'score_owner_budget', label: 'Clear owner with budget', weight: 10 },
   { key: 'score_narrow_wedge', label: 'Narrow buildable wedge', weight: 10 },
-  { key: 'score_reg_friction', label: 'Regulatory friction (5 = high friction, reverse-scored)', weight: 5 },
+  { key: 'score_reg_friction', label: 'Regulatory friction (5 = high, reverse-scored)', weight: 5 },
 ] as const;
 export type ScoreKey = (typeof SCORE_CRITERIA)[number]['key'];
