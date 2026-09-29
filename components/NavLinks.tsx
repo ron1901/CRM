@@ -4,6 +4,7 @@ import { usePathname } from 'next/navigation';
 
 const NAV = [
   ['/', 'Dashboard'],
+  ['/contacts', 'Contacts'],
   ['/pipeline', 'Pipeline'],
   ['/calendar', 'Calendar'],
   ['/interviews', 'Interviews'],
@@ -17,7 +18,7 @@ export function NavLinks() {
   return (
     <>
       {NAV.map(([href, label]) => {
-        const active = href === '/' ? path === '/' : path.startsWith(href) || (href === '/pipeline' && path.startsWith('/contacts'));
+        const active = href === '/' ? path === '/' : path.startsWith(href);
         return (
           <Link
             key={href}
