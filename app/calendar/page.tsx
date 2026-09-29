@@ -18,6 +18,17 @@ export default async function CalendarPage() {
     supabase.from('contacts').select('id,name,company,status').not('status', 'in', '("Declined","No response")').order('name'),
     supabase.from('interviews').select('contact_id,date'),
   ]);
+  if (meetingsRes.error?.message.includes('meeting_with') || meetingsRes.error?.message.includes('meeting_link')) {
+    return (
+      <div className="card mx-auto max-w-2xl space-y-3">
+        <h1 className="h1">Calendar needs a one-time database update</h1>
+        <p className="text-slate-300">In Supabase → SQL Editor → + → Create a new snippet, paste this and click Run, then reload:</p>
+        <pre className="overflow-x-auto rounded-lg bg-black/40 p-3 text-xs text-cyan-200">{`alter table interviews add column if not exists ai_suggestions jsonb;
+alter table contacts add column if not exists meeting_with text check (meeting_with in ('Ron','Ronica','Both'));
+alter table contacts add column if not exists meeting_link text;`}</pre>
+      </div>
+    );
+  }
   for (const r of [meetingsRes, gatesRes, contactsRes, interviewsRes]) if (r.error) throw new Error(r.error.message);
   const logged = new Set(interviewsRes.data!.map((i) => i.contact_id));
   const meetings: CalMeeting[] = meetingsRes.data!.map((m) => ({ ...m, meeting_at: m.meeting_at!, logged: logged.has(m.id) }));
