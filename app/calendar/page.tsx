@@ -25,7 +25,8 @@ export default async function CalendarPage() {
         <p className="text-slate-300">In Supabase → SQL Editor → + → Create a new snippet, paste this and click Run, then reload:</p>
         <pre className="overflow-x-auto rounded-lg bg-black/40 p-3 text-xs text-cyan-200">{`alter table interviews add column if not exists ai_suggestions jsonb;
 alter table contacts add column if not exists meeting_with text check (meeting_with in ('Ron','Ronica','Both'));
-alter table contacts add column if not exists meeting_link text;`}</pre>
+alter table contacts add column if not exists meeting_link text;
+notify pgrst, 'reload schema';`}</pre>
       </div>
     );
   }

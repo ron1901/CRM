@@ -25,7 +25,11 @@ export function ActionForm({
         const fd = new FormData(form);
         start(async () => {
           const r = await action(fd);
-          if (r && r.error) setError(r.error);
+          if (r && r.error) {
+            // A missing column means the Supabase SQL update hasn't been run yet, not that a field is required.
+            const dbUpdate = /schema cache|does not exist/i.test(r.error);
+            setError(dbUpdate ? `The database needs a one-time update (run the latest SQL from the README in Supabase → SQL Editor). Details: ${r.error}` : r.error);
+          }
           else {
             setError(null);
             if (resetOnSuccess) form.reset();
