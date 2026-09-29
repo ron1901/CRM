@@ -18,6 +18,8 @@ export type Contact = {
   status: string;
   first_contacted_on: string | null;
   meeting_at: string | null;
+  meeting_with: string | null;
+  meeting_link: string | null;
   last_touch_date: string | null;
   next_action: string | null;
   next_action_date: string | null;

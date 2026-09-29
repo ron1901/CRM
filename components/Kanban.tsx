@@ -129,7 +129,7 @@ export function Kanban({ contacts: initial, today }: { contacts: Contact[]; toda
                       {c.hunting_ground && <span className="badge bg-cyan-400/10 text-cyan-200">{c.hunting_ground}</span>}
                     </div>
                     {c.status === 'Scheduled' && c.meeting_at && (
-                      <div className="mt-1 text-xs text-emerald-300">📅 <LocalTime iso={c.meeting_at} /></div>
+                      <div className="mt-1 text-xs text-emerald-300">📅 <LocalTime iso={c.meeting_at} />{(c.meeting_with ?? c.owner) && ` · ${c.meeting_with ?? c.owner}`}</div>
                     )}
                     {c.next_action_date && (
                       <div className={`mt-1 text-xs ${c.next_action_date < today ? 'text-rose-400' : 'text-slate-400'}`}>

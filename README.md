@@ -39,7 +39,7 @@ Built with Next.js, Supabase (Postgres + auth) and Vercel. Claude (Anthropic API
    - `vercel.json` pins the server to Dublin (`dub1`), next to the database.
 
 ### 3. AI observation suggestions
-1. Existing projects only (skip on a fresh setup): run `supabase/migrations/002_ai_suggestions.sql` in the Supabase SQL Editor.
+1. Existing projects only (skip on a fresh setup): run `supabase/migrations/002_ai_suggestions.sql` and `003_meeting_details.sql` in the Supabase SQL Editor.
 2. Create an API key at [console.anthropic.com](https://console.anthropic.com) (Settings → API Keys) and add a small prepaid credit.
 3. In Vercel → Settings → Environment Variables, add `ANTHROPIC_API_KEY`, then redeploy (Deployments → ⋯ → Redeploy).
 
@@ -91,6 +91,11 @@ npm run dev                  # http://localhost:3000
 5. The contact moves to **Interviewed** automatically. Set a Follow-up next action if needed.
 
 The Fathom transcript can be pasted in later from the "Interview details" section on the same page.
+
+### Calendar
+- **Calendar** shows the week's booked interviews in your own timezone, coloured by who attends (Ron / Ronica / Both), plus the decision gates.
+- **+ Book a meeting**: pick the contact, time, who from us, and the call link. The contact moves to Scheduled.
+- Dragging a card to Scheduled on the Pipeline also asks for the time. After the call, the meeting shows **+ Log interview**.
 
 ### Weekly synthesis (Friday, together, about 45 min)
 1. **Observations**: filter to "Unclustered". Tick related rows, then **Assign** to an existing cluster or **+ New cluster**.

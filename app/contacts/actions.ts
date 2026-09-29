@@ -22,6 +22,8 @@ function contactFromForm(fd: FormData) {
     owner: str(fd, 'owner'),
     status: str(fd, 'status') ?? 'Target',
     meeting_at: str(fd, 'meeting_at'),
+    meeting_with: str(fd, 'meeting_with'),
+    meeting_link: str(fd, 'meeting_link'),
     last_touch_date: str(fd, 'last_touch_date'),
     next_action: str(fd, 'next_action'),
     next_action_date: str(fd, 'next_action_date'),

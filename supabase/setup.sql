@@ -34,6 +34,8 @@ create table contacts (
   status text not null default 'Target' check (status in ('Target','Contacted','Replied','Scheduled','Interviewed','Follow-up','Declined','No response')),
   first_contacted_on date,   -- set automatically when status first leaves Target (drives "outreach sent")
   meeting_at timestamptz,    -- booked interview slot (drives "booked for next week")
+  meeting_with text check (meeting_with in ('Ron','Ronica','Both')), -- who from the team attends
+  meeting_link text,         -- Zoom / Teams / Meet link
   last_touch_date date,
   next_action text,
   next_action_date date,

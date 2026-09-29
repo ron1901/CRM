@@ -2,7 +2,7 @@ import { ActionForm } from './ActionForm';
 import { Field, Select } from './Fields';
 import { LocalDateTimeInput } from './LocalDateTime';
 import { saveContact } from '@/app/contacts/actions';
-import { COMPANY_TYPES, HUNTING_GROUNDS, OWNERS, SENIORITY, SOURCES, STATUSES } from '@/lib/options';
+import { COMPANY_TYPES, HUNTING_GROUNDS, INTERVIEWERS, OWNERS, SENIORITY, SOURCES, STATUSES } from '@/lib/options';
 import type { Contact } from '@/lib/types';
 
 export function ContactForm({
@@ -36,6 +36,8 @@ export function ContactForm({
         <Field label="Owner"><Select name="owner" options={OWNERS} defaultValue={c?.owner} /></Field>
         <Field label="Status"><Select name="status" options={STATUSES} defaultValue={c?.status ?? 'Target'} blank={false} /></Field>
         <Field label="Interview booked for"><LocalDateTimeInput name="meeting_at" defaultValue={c?.meeting_at} /></Field>
+        <Field label="Meeting with (us)"><Select name="meeting_with" options={INTERVIEWERS} defaultValue={c?.meeting_with} /></Field>
+        <Field label="Meeting link"><input name="meeting_link" type="url" className="input" placeholder="Zoom / Teams / Meet" defaultValue={c?.meeting_link ?? ''} /></Field>
         <Field label="Last touch"><input name="last_touch_date" type="date" className="input" defaultValue={c?.last_touch_date ?? ''} /></Field>
         <Field label="Next action date"><input name="next_action_date" type="date" className="input" defaultValue={c?.next_action_date ?? ''} /></Field>
         <Field label="Next action" className="sm:col-span-2 lg:col-span-4"><input name="next_action" className="input" defaultValue={c?.next_action ?? ''} /></Field>
